@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-boiler",
+  "version": "1.0.0",
+  "description": "boiler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adib-enc/nodejs-boiler.git"
+  },
+  "keywords": [
+    "boilerplate"
+  ],
+  "author": "adib-enc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adib-enc/nodejs-boiler/issues"
+  },
+  "homepage": "https://github.com/adib-enc/nodejs-boiler#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
