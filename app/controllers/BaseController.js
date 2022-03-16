@@ -15,42 +15,47 @@ class BaseController{
         this.commonServerFail = this.commonServerFail.bind(this);
     }
 
-    baseJson(req, res, next, code=200, status="success", msg="-", data = null){
+    baseJson({req, res, next, httpCode=200, code=null, success="success", msg="-", data = null}){
         let json = {
-            status: status,
+            success: success ? true : false,
             message: msg,
         }
         
         if(data){
             json.data = data
         }
+        
+        if(code){
+            json.code = code
+        }
 
-        return res.status(code).send(json);
+        return res.status(httpCode).send(json);
     }
 
-    success(req, res, next, msg, data, code=200){
-        return this.baseJson(req, res, next, code, "success", msg, data)
+    success(req, res, next, msg="success", data, httpCode=200){
+        return this.baseJson({req, res, next, httpCode, msg, data})
     }
 
-    userFail(req, res, next, msg, data){
-        return this.baseJson(req, res, next, 400, null, msg, data)
+    userFail(req, res, next, msg="Maaf ada kesalahan user", data){
+        return this.baseJson({req, res, next, httpCode: 400, success: false, msg, data})
     }
 
-    validationFail(req, res, next, code, msg, data){
-        return this.baseJson(req, res, next, code, "fail", msg, data)
+    validationFail(req, res, next, httpCode, msg, data){
+        return this.baseJson(req, res, next, httpCode, false, msg, data)
     }
     
     serverFail(req, res, next, msg, data){
-        return this.baseJson(req, res, next, 500, 'fail', msg, data)
+        return this.baseJson({req, res, next, httpCode: 500, success: false, msg, data})
     }
 
     commonServerFail(req, res, next){
-        return this.baseJson(req, res, next, 500, 'error', 'Maaf, terjadi kegagalan pada server kami.', null)
+        return this.baseJson({req, res, next, httpCode: 500, success: false, msg: 'Maaf, terjadi kegagalan pada server kami.', data: {}})
     }
 }
 
 module.exports = {
     BaseController,
+    Controller: BaseController,
     instance(){
         return new BaseController()
     }

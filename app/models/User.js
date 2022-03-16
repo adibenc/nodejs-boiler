@@ -17,14 +17,19 @@ User.init({
   email_verified_at: {
     type: DataTypes.STRING
   },
-  is_active: {
+  password: {
     type: DataTypes.STRING
+  },
+  is_active: {
+    type: DataTypes.STRING,
+    defaultValue: 1
   },
   remember_token: {
     type: DataTypes.STRING
   },
   role: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    defaultValue: "customer"
   },
 }, {
   sequelize, // db seq instance

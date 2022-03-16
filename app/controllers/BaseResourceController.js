@@ -1,18 +1,31 @@
 // base
+// const { Op } = require("sequelize/types");
+const { cl } = require("../../util/util");
 const {BaseController} = require("./BaseController");
 
+// sequelize resource
 class BaseResourceController extends BaseController{
-    
+    model
+
     constructor(){
         super()
     }
 
-    post(req, h, ctx){
+    setModel(model){
+        this.model = model
+        return this
+    }
+
+    getModel(){
+        return this.model
+    }
+
+    async create(req, res, next){
         try {
             // todo validate, proccess
+            // cl( req.body )
 
-            // let data = this.service.create(req.payload)
-            let data = {id:1, name: "John doe"}
+            let data = await this.getModel().create(req.body)
 
             return this.success(req, res, next, "Data Dibuat!", data, 201);
         } catch (error) {
@@ -29,10 +42,9 @@ class BaseResourceController extends BaseController{
     async all(req, res, next){
         try {
             // let data = this.service.all()
-            let data = {id:1, name: "John doe"}
-            this.baseJson(req, res, next, 200, "success", "-", data)
-
-            // return this.success(h, "Success get all!", data);
+            let data = await this.getModel().findAll()
+            
+            return this.success(req, res, next, "Sukses!", data, 200);
         } catch (error) {
             // Server ERROR!
             console.error(error);
@@ -43,10 +55,13 @@ class BaseResourceController extends BaseController{
     async single(req, res, next){
         try {
             const { id } = req.params;
-            let data = {id}
-            // let data = await this.service.single(id)
+
+            let data = await this.getModel().findAll({
+                where: { id:id }
+            });
+            data = data.length > 0 ? data[0] : {};
     
-            return this.success(h, "Success!", data);
+            return this.success(req, res, next, "Success!", data);
         } catch (error) {
             // if (error instanceof ClientError) {
             //     return this.validationFail(h, error.statusCode, error.message, null)
@@ -63,11 +78,14 @@ class BaseResourceController extends BaseController{
             const { id } = req.params;
             // this.validator.validate(this.schema, req.payload)
             
-            // let data = await this.service.update(id, req.payload)
+            let data = this.getModel().update(req.body, {
+                where: {
+                  id: id
+                }
+              });
     
-            return this.success(h, "Updated!", data);
+            return this.success(req, res, next, "Updated!", data);
         } catch (error) {
-      
             // Server ERROR!
             console.error(error);
             return this.commonServerFail(req, res, next);
@@ -78,8 +96,13 @@ class BaseResourceController extends BaseController{
         try {
             const { id } = req.params;
             // let data = this.service.delete(id)
+            let data = this.getModel().destroy({
+                where: {
+                  id: id
+                }
+            });
     
-            return this.success(h, "Deleted!", data);
+            return this.success(req, res, next, "Deleted!", data);
         } catch (error) {
             // Server ERROR!
             console.error(error);

@@ -8,7 +8,14 @@ function rc(ctrlFunc){
     return routeController(ctrlFunc)
 };
 
+function getController(ctrlPath){
+    let {Controller} = require(ctrlPath)
+
+    return new Controller()
+}
+
 module.exports = {
+    getController,
     routeController,
-    rc
+    rc,
 }

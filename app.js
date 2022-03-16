@@ -6,14 +6,21 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const pug = require('pug');
 
+// reqs
+const bodyParser = require('body-parser')
+const multer = require('multer') // v1.0.5
+const upload = multer() // for parsing multipart/form-data
+
 var webRouter = require('./routes/web');
 var apiRouter = require('./routes/api');
 
 var app = express();
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8000
 
-// view engine setup
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true }) ) // for parsing application/x-www-form-urlencoded
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.engine('pug', require('pug').__express)
