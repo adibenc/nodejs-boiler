@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../database/dbcon');
-var {rc, getController} = require('./baseRoute');
+var {rc, getController, resourceCrud} = require('./baseRoute');
 const { Sequelize } = require('sequelize');
 
 var {BaseResourceController} = require('../app/controllers/BaseResourceController');
@@ -19,10 +19,7 @@ router.get('/', function(req, res, next) {
   baseController.baseJson(req, res, next, 200, "success")
 });
 
+resourceCrud(router, "user", userController)
 router.get('/user/all', (req, res, next) => { userController.all(req, res, next) });
-router.get('/user/:id', (req, res, next) => { userController.single(req, res, next) });
-router.post('/user/', (req, res, next) => { userController.create(req, res, next) });
-router.put('/user/:id', (req, res, next) => { userController.update(req, res, next) });
-router.delete('/user/:id', (req, res, next) => { userController.delete(req, res, next) });
 
 module.exports = router;

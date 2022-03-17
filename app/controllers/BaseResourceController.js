@@ -82,7 +82,7 @@ class BaseResourceController extends BaseController{
                 where: {
                   id: id
                 }
-              });
+            });
     
             return this.success(req, res, next, "Updated!", data);
         } catch (error) {
