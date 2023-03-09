@@ -9,6 +9,8 @@ services:
     restart: always
     volumes:
       - ./pgdata:/var/lib/postgresql/
+      - /tmp:/tmp
+        #      - ./usr/bin:/usr/bin/
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=docker
