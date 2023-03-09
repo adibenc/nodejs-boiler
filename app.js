@@ -1,8 +1,10 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+
 const createError = require('http-errors');
 const dotenv = require('dotenv').config()
+require('express-group-routes');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -13,8 +15,11 @@ const bodyParser = require('body-parser')
 const multer = require('multer') // v1.0.5
 const upload = multer() // for parsing multipart/form-data
 
+var middleware = require("./routes/middlewares")
+
 var webRouter = require('./routes/web');
 var apiRouter = require('./routes/api');
+var authRouter = require('./routes/authRouter');
 
 const { cl } = require('./util/util');
 // const { passportRoutes } = require('./app/oauth/auth');
@@ -37,12 +42,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // set passport routes
-const {setupPassport} = require('./app/oauth/bundle');
-setupPassport(app)
+// const {setupPassport} = require('./app/oauth/bundle');
+// setupPassport(app)
 
 // web & api routes
 app.use('/', webRouter);
-app.use('/api', apiRouter);
+app.use('/api', middleware.authenticateToken, apiRouter);
+app.use('/', authRouter);
 
 
 // catch 404 and forward to error handler
@@ -63,16 +69,16 @@ app.use(function(err, req, res, next) {
 
 
 const options = {
-  key  : fs.readFileSync(path.join(__dirname, 'app/oauth/certs/privatekey.pem')),
-  cert : fs.readFileSync(path.join(__dirname, 'app/oauth/certs/certificate.pem')),
+//   key  : fs.readFileSync(path.join(__dirname, 'app/oauth/certs/privatekey.pem')),
+//   cert : fs.readFileSync(path.join(__dirname, 'app/oauth/certs/certificate.pem')),
 };
 
 // Create our HTTPS server listening on port 8000.
-https.createServer(options, app).listen(port)
+// https.createServer(options, app).listen(port)
 console.log(`Example app listening on port ${port}`)
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 module.exports = app;

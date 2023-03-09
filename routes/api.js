@@ -8,7 +8,7 @@ const { Sequelize } = require('sequelize');
 var {BaseResourceController} = require('../app/controllers/BaseResourceController');
 var brController = new BaseResourceController()
 var userController = getController('../app/controllers/UserController')
-// var baseController = getController('../app/controllers/BaseController')
+var baseController = getController('../app/controllers/BaseController')
 
 const User = require('../app/models/User');
 
@@ -16,7 +16,11 @@ const cl = console.log
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  baseController.baseJson(req, res, next, 200, "success")
+	baseController.baseJson(req, res, next, 200, "success")
+});
+
+router.get('/user/me', function(req, res, next) {
+	baseController.success(req, res, next, "ok", {})
 });
 
 resourceCrud(router, "user", userController)

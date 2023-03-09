@@ -51,6 +51,10 @@ class BaseController{
     commonServerFail(req, res, next){
         return this.baseJson({req, res, next, httpCode: 500, success: false, msg: 'Maaf, terjadi kegagalan pada server kami.', data: {}})
     }
+
+	forbidden(req, res, next, msg){
+        return this.baseJson({req, res, next, httpCode: 403, success: false, msg: msg, data: {}})
+    }
 }
 
 module.exports = {
